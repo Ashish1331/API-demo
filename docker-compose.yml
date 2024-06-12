@@ -1,0 +1,17 @@
+version: '3.9'
+
+services:
+  demo-service:
+    build: .
+    ports:
+      - "8080:8080"
+      - "1234:1234"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"

@@ -55,7 +55,7 @@ public class DemoService {
     }
 
     private void scheduleRandomAdsTask() {
-        int delay = random.nextInt(30000); // random between 0 to 30 seconds
+        int delay = random.nextInt(30000); // random  0 to 30 seconds
         timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -84,21 +84,25 @@ public class DemoService {
     }
 
     private static void saveState() {
+        logger.info("Attempting to save state to {}", STATE_FILE);
         try (FileWriter writer = new FileWriter(STATE_FILE)) {
             Gson gson = new Gson();
             State state = new State(adsCount.get());
             gson.toJson(state, writer);
+            logger.info("State saved successfully: {}", state);
         } catch (IOException e) {
             logger.error("Failed to save state", e);
         }
     }
 
     private void restoreState() {
+        logger.info("Attempting to restore state from {}", STATE_FILE);
         try (FileReader reader = new FileReader(STATE_FILE)) {
             Gson gson = new Gson();
             Type type = new TypeToken<State>() {}.getType();
             State state = gson.fromJson(reader, type);
             adsCount.set(state.getAdsCount());
+            logger.info("State restored successfully: {}", state);
         } catch (IOException e) {
             adsCount.set(random.nextInt(11));
             logger.warn("Failed to restore state, setting ads count to a random value");
